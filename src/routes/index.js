@@ -6,14 +6,29 @@ router.get('/', async (ctx, next) => {
   })
 })
 
-router.get('/string', async (ctx, next) => {
-  ctx.body = 'koa2 string'
-})
+
 
 router.get('/json', async (ctx, next) => {
   ctx.body = {
     title: 'koa2 json'
   }
 })
+//个人主页
+router.get('/profile/:userName',async(ctx,next)=>{
+  const {userName} = ctx.params;//获取参数
+  ctx.body = {
+    title:'this is a profile page!',
+    userName
+  }
+})
 
+//加载更多
+router.get('/loadMore/:userName/:pageIndex',async(ctx,next)=>{
+  const{userName,pageIndex} = ctx.params;
+  ctx.body={
+    title:'this is loadMore API',
+    userName,
+    pageIndex
+  }
+})
 module.exports = router
