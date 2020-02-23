@@ -2,11 +2,12 @@
  * @description user controller 用户信息处理
  * @authod JasonLonger
 */
-const { getUserInfo } = require('../services/user.js');
-const { SuccessModel,ErrorModel } = require('../model/ResModel.js');
+const { getUserInfo,createUser } = require('../services/user.js');
+const { SuccessModel,ErrorModel,registerFailInfo } = require('../model/ResModel.js');
 const {
-    registerUserNameNotExistInfo
+    registerUserNameNotExistInfo,registerUserNameExistInfo
 } = require('../model/ErrorInfo');
+const doCrypto = require('../utils/cryp.js');
 /** 
  * 用户名是否存在
  * @param {string} userName 用户名
@@ -29,6 +30,34 @@ async function isExist(userName){
     //统一返回格式
 }
 
+/** 
+ * 注册
+ * @param {string} userName 用户名
+ * @param {string} password 密码
+ * @param {number} gender 性别 （1 男 2 女 3 保密） 
+*/
+async function register({ userName, password, gender }){
+    const userInfo = await getUserInfo(userName);
+    if(userInfo){
+        //用户名已存在
+        return ErrorModel(registerUserNameExistInfo)
+    }
+    try{
+        await createUser({
+            userName,
+            password:doCrypto(password),
+            gender
+        })
+        return new SuccessModel();
+    }catch(ex){
+        console.error(ex.message, ex.stack) //打印错误信息和错误栈
+        return new ErrorModel(registerFailInfo);
+    }
+}
+//注册service
+
+
 module.exports = {
-    isExist
+    isExist,
+    register
 }

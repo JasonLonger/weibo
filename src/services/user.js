@@ -3,7 +3,7 @@
  * @author JasonLonger
 */
 
-const { User } = require('../db/model/index');
+const { User } = require('../db/model/index.js');
 const { formatUser } = require('./_format.js')
 
 
@@ -36,6 +36,28 @@ async function getUserInfo(userName, password){
     return formatUser;
 }
 
+
+/** 
+ * 创建用户
+ * @param {string} userName 用户名
+ * @param {string} password 密码
+ * @param {number} gender 性格
+ * @param {string} nickName 昵称
+*/
+async function createUser({ userName, password, gender = 3, nickName}){
+
+    const result = await User.create({
+        userName,
+        password,
+        nickName: nickName ? nickName :userName,
+        gender
+    })
+    return result.dataValues;
+
+
+}
+
 module.exports = {
-    getUserInfo
+    getUserInfo,
+    createUser
 }
