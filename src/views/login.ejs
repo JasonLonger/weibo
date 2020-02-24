@@ -1,4 +1,4 @@
-<%- include('layout/header', { title: '微博 - 登录', isNarrow: true })%>
+<%- include('layout/header.ejs', { title: '微博 - 登录', isNarrow: true })%>
 
 <h1>登录</h1>
 <% if (locals.isLogin) { %>
@@ -44,4 +44,5 @@
     </script>
 <% } %>
 
-<%- include('layout/footer')%>
+
+<%- include('layout/footer.ejs')%>
