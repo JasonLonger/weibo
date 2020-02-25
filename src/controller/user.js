@@ -66,13 +66,17 @@ async function register({ userName, password, gender }){
 async function login(ctx, userName, password){
     //获取用户信息
     const userInfo = await getUserInfo(userName,doCrypto(password))
+    // console.log(ctx.session)
     if(!userInfo){
         //登录失败
         return new ErrorModel(loginFailInfo)
     }
-    //登录成功,将数据存入session
+    
+    // 登录成功,将数据存入session  
     if(ctx.session.userInfo==null){
-        ctx.session.userInfo = userInfo;
+        // ctx.session.userInfo =userName;
+        ctx.session['userInfo'] = userInfo;
+        
     }
     return new SuccessModel()
 }
