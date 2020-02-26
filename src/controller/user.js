@@ -75,8 +75,8 @@ async function login(ctx, userName, password){
     // 登录成功,将数据存入session  
     if(ctx.session.userInfo==null){
         // ctx.session.userInfo =userName;
-        ctx.session['userInfo'] = userInfo;
-        
+        // ctx.session['userInfo'] = userInfo;
+        ctx.session.userInfo = JSON.stringify(userInfo) 
     }
     return new SuccessModel()
 }
