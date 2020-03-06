@@ -5,7 +5,13 @@
 
 const router = require('koa-router')();
 const { 
-    isExist,register,login,deleteCurUser,changePassword,changeInfo,logout 
+    isExist,
+    register,
+    login,
+    deleteCurUser,
+    changePassword,
+    changeInfo,
+    logout 
 } = require('../../controller/user.js')
 const userValidate = require('../../validator/user.js')
 const { genValidator } = require('../../middlewares/validator.js')
@@ -36,9 +42,19 @@ router.post('/isExist', async(ctx, next)=>{
 router.post('/login',async (ctx, next)=>{
     const { userName, password} = ctx.request.body;
     ctx.body = await login(ctx,userName,password)
+    // ctx.body='123'
 })
 
-//patch是幂等的，存在则替换，不存在则创建
+// 删除
+router.post('/delete',loginCheck, async(ctx,next)=>{
+    if(isTest){
+        //测试环境下，测试账号登录之后，删除自己
+        const { userName } = ctx.session.userInfo
+        //调用controller
+        ctx.body = await deleteCurUser(userName);
+    }
+}) 
+// patch是幂等的，存在则替换，不存在则创建
 
 // 修改个人信息
 router.patch('/changeInfo', loginCheck, genValidator(userValidate), async (ctx, next) => {
@@ -56,15 +72,7 @@ router.patch('/changePassword', loginCheck, genValidator(userValidate), async (c
 router.post('/logout', loginCheck, async (ctx, next) => {
     ctx.body = await logout(ctx)
 })
-//删除
-router.post('/delete',loginCheck, async(ctx,next)=>{
-    if(isTest){
-        //测试环境下，测试账号登录之后，删除自己
-        const { userName } = ctx.session.userInfo
-        //调用controller
-        ctx.body = await deleteCurUser(userName);
-    }
-}) 
+
 
 
 module.exports =router

@@ -3,6 +3,7 @@ const { loginRedirect,loginCheck } = require('../middlewares/loginChecks.js')
 
 
 router.get('/', loginRedirect, async (ctx, next) => {
+  console.log('viewIndex',ctx.session.userInfo)
   await ctx.render('index', {
     title: 'Hello Koa 2!',
     isMe : false,
@@ -29,21 +30,21 @@ router.get('/json',loginCheck, async (ctx, next) => {
   }
 })
 //个人主页
-router.get('/profile/:userName',async(ctx,next)=>{
-  const {userName} = ctx.params;//获取参数
-  ctx.body = {
-    title:'this is a profile page!',
-    userName
-  }
-})
+// router.get('/profile/:userName',async(ctx,next)=>{
+//   const {userName} = ctx.params;//获取参数
+//   ctx.body = {
+//     title:'this is a profile page!',
+//     userName
+//   }
+// })
 
 //加载更多
-router.get('/loadMore/:userName/:pageIndex',async(ctx,next)=>{
-  const{userName,pageIndex} = ctx.params;
-  ctx.body={
-    title:'this is loadMore API',
-    userName,
-    pageIndex
-  }
-})
+// router.get('/loadMore/:userName/:pageIndex',async(ctx,next)=>{
+//   const{userName,pageIndex} = ctx.params;
+//   ctx.body={
+//     title:'this is loadMore API',
+//     userName,
+//     pageIndex
+//   }
+// })
 module.exports = router

@@ -12,12 +12,13 @@ const redisStore = require('koa-redis')
 const {SESSION_SECRET_KEY} = require('./conf/secretKeys')
 const { REDIS_CONF } = require('./conf/db')
 const { isProd } = require('./utils/env')
+const cors = require('koa2-cors');
 //路由
 const userViewRouter = require('./routes/view/user.js');
 const index = require('./routes/index')
 const userAPIRouter = require('./routes/api/user.js')
 const errorViewRouter = require('./routes/view/error')
-
+const utilsAPIRouter = require('./routes/api/utils')
 // error handler 页面显示
 let onerrorConf = {}
 if (isProd) {
@@ -40,6 +41,9 @@ app.use(views(__dirname + '/views', {
   extension: 'ejs'
 }))
 
+
+app.use(cors())
+
 // session 配置
 // app.keys = [SESSION_SECRET_KEY]
 app.keys = [SESSION_SECRET_KEY];
@@ -50,25 +54,28 @@ app.use(session({
         path: '/',
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000,  // 单位 ms
-
+        overwrite: true
     },
     store: redisStore({
         all: `${REDIS_CONF.host}:${REDIS_CONF.port}`
     })
+    
+    // store:redisStore()
 }))
 
 // logger
-// app.use(async (ctx, next) => {
-//   const start = new Date()
-//   await next()
-//   const ms = new Date() - start
-//   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
-// })
+app.use(async (ctx, next) => {
+  const start = new Date()
+  await next()
+  const ms = new Date() - start
+  console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
+})
 
 // routes
 app.use(index.routes(), index.allowedMethods())
-app.use(userViewRouter.routes(),userViewRouter.allowedMethods());
+app.use(utilsAPIRouter.routes(), utilsAPIRouter.allowedMethods());
 app.use(userAPIRouter.routes(),userAPIRouter.allowedMethods());
+app.use(userViewRouter.routes(),userViewRouter.allowedMethods());
 app.use(errorViewRouter.routes(), errorViewRouter.allowedMethods()) // 404 路由注册到最后面
 
 // error-handling

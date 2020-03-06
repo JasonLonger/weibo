@@ -53,9 +53,9 @@ async function createUser({ userName, password, gender = 3, nickName}){
         nickName: nickName ? nickName :userName,
         gender
     })
-    return result.dataValues;
+    const data = result.dataValues
 
-
+    return data
 }
 
 /** 
@@ -71,6 +71,8 @@ async function deleteUser(userName){
     //result 删除的行数
     return result > 0
 }
+
+
 /**
  * 更新用户信息
  * @param {Object} param0 要修改的内容 { newPassword, newNickName, newPicture, newCity }

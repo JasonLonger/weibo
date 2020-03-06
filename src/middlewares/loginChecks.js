@@ -12,11 +12,14 @@ const { loginCheckFailInfo } = require('../model/ErrorInfo')
  * @param {function} next next
  */
 async function loginCheck(ctx, next) {
+    
     if (ctx.session && ctx.session.userInfo) {
         // 已登录
+
         await next()
         return
     }
+  
     // 未登录
     ctx.body = new ErrorModel(loginCheckFailInfo)
 }
@@ -27,14 +30,20 @@ async function loginCheck(ctx, next) {
  * @param {function} next next
  */
 async function loginRedirect(ctx, next) {
+
+    // console.log('checkLogin',1)
+    // console.log('checkout',ctx.session)
+    // console.log('loginChecks',ctx.session.userInfo)
     if (ctx.session && ctx.session.userInfo) {
         // 已登录
+       
         await next()
         return
     }
     // 未登录
     const curUrl = ctx.url
-    ctx.redirect('/login?url=' + encodeURIComponent(curUrl))
+    ctx.redirect('/login?url=' + encodeURIComponent(curUrl));
+    // await next()
 }
 
 module.exports = {

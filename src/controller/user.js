@@ -2,13 +2,20 @@
  * @description user controller 用户信息处理
  * @authod JasonLonger
 */
-const { getUserInfo,createUser,deleteUser,updateUser } = require('../services/user.js');
-const { SuccessModel,ErrorModel,registerFailInfo } = require('../model/ResModel.js');
+const { 
+    getUserInfo,
+    createUser,
+    deleteUser,
+    updateUser } = require('../services/user.js');
+const { SuccessModel,ErrorModel } = require('../model/ResModel.js');
 const {
     registerUserNameNotExistInfo,
     registerUserNameExistInfo,
     loginFailInfo,
-    deleteUserFailInfo
+    deleteUserFailInfo,
+    registerFailInfo,
+    changeInfoFailInfo,
+    changePasswordFailInfo
 } = require('../model/ErrorInfo');
 const doCrypto = require('../utils/cryp.js');
 /** 
@@ -69,19 +76,40 @@ async function register({ userName, password, gender }){
 async function login(ctx, userName, password){
     //获取用户信息
     const userInfo = await getUserInfo(userName,doCrypto(password))
-    // console.log(ctx.session)
+    console.log('Login userinfo',userInfo)
     if(!userInfo){
         //登录失败
         return new ErrorModel(loginFailInfo)
     }
-    
+   
     // 登录成功,将数据存入session  
     if(ctx.session.userInfo==null){
-        // ctx.session.userInfo =userName;
-        // ctx.session['userInfo'] = userInfo;
+    
         ctx.session.userInfo = userInfo
+        // console.log('login',2)
+        // console.log('ctx.session',ctx.session)
+        // console.log('ctx.session.userInfo',ctx.session.userInfo)
     }
+    
     return new SuccessModel()
+}
+
+
+
+
+
+/**
+ * 删除当前用户
+ * @param {string} userName 用户名
+ */
+async function deleteCurUser(userName) {
+    const result = await deleteUser(userName)
+    if (result) {
+        // 成功
+        return new SuccessModel()
+    }
+    // 失败
+    return new ErrorModel(deleteUserFailInfo)
 }
 
 
@@ -143,24 +171,6 @@ async function changePassword(userName, password, newPassword) {
     // 失败
     return new ErrorModel(changePasswordFailInfo)
 }
-
-
-
-/**
- * 删除当前用户
- * @param {string} userName 用户名
- */
-async function deleteCurUser(userName) {
-    const result = await deleteUser(userName)
-    if (result) {
-        // 成功
-        return new SuccessModel()
-    }
-    // 失败
-    return new ErrorModel(deleteUserFailInfo)
-}
-
-
 
 /**
  * 退出登录
