@@ -14,8 +14,9 @@ const { REDIS_CONF } = require('./conf/db')
 const { isProd } = require('./utils/env')
 const cors = require('koa2-cors');
 //路由
+const HomeAPIRouter = require('./routes/api/blog-home.js')
+const blogViewRouter = require('./routes/view/blog.js')
 const userViewRouter = require('./routes/view/user.js');
-const index = require('./routes/index')
 const userAPIRouter = require('./routes/api/user.js')
 const errorViewRouter = require('./routes/view/error')
 const utilsAPIRouter = require('./routes/api/utils')
@@ -72,7 +73,8 @@ app.use(async (ctx, next) => {
 })
 
 // routes
-app.use(index.routes(), index.allowedMethods())
+app.use(HomeAPIRouter.routes(),HomeAPIRouter.allowedMethods());
+app.use(blogViewRouter.routes(),blogViewRouter.allowedMethods());
 app.use(utilsAPIRouter.routes(), utilsAPIRouter.allowedMethods());
 app.use(userAPIRouter.routes(),userAPIRouter.allowedMethods());
 app.use(userViewRouter.routes(),userViewRouter.allowedMethods());
