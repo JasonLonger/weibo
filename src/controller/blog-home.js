@@ -14,7 +14,7 @@ async function create({userId, content, image}){
         //创建微博
         const blog = await createBlog({
             userId,
-            content,
+            content:xss(content),
             image
         })
         return new SuccessModel(blog)
