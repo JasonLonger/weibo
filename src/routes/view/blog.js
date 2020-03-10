@@ -15,16 +15,7 @@ router.get('/',loginRedirect,async(ctx,next)=>{
     // 获取第一页数据
     // const result = await getHomeBlogList(userId)
     // const { isEmpty, blogList, pageSize, pageIndex, count } = result.data
-    await ctx.render('index',{
-        
-        blogData: {
-            isEmpty,
-            blogList,
-            pageSize,
-            pageIndex,
-            count
-        }
-    })
+    await ctx.render('index',{})
 })
 
 module.exports = router

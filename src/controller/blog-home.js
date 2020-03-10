@@ -2,9 +2,10 @@
  * @description 首页 controller
  * @author JasonLonger
 */
-
+const xss = require('xss')
 const { SuccessModel,ErrorModel } = require('../model/ResModel')
 const { createBlogFailInfo } = require('../model/ErrorInfo.js')
+const { createBlog } = require('../services/blog.js')
 /** 
  * 创建微博
  * @param {Object} param0 创建微博所需的数据{userId,content,image}
